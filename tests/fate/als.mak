@@ -7,5 +7,8 @@ endef
 
 $(foreach N,$(ALS_SUITE),$(eval $(call FATE_ALS_SUITE,$(N))))
 
+FATE_ALS += fate-mpeg4-als-conformance-07
+fate-mpeg4-als-conformance-07: CMD = crc -i $(TARGET_SAMPLES)/lossless-audio/als_07_2ch192k32bF.mp4
+
 FATE_SAMPLES_AVCONV-$(call DEMDEC, MOV, ALS) += $(FATE_ALS)
 fate-als: $(FATE_ALS)

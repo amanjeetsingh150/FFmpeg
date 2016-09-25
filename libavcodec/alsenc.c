@@ -2835,7 +2835,7 @@ static int write_specific_config(AVCodecContext *avctx)
     put_bits32(&ctx->pb,     avctx->sample_rate);
     put_bits32(&ctx->pb,     sconf->samples);
     put_bits  (&ctx->pb, 16, avctx->channels - 1);
-    put_bits  (&ctx->pb,  3, 0);                      // original file_type (0 = unknown, 1 = wav, ...)
+    put_bits  (&ctx->pb,  3, 1);                      // original file_type (0 = unknown, 1 = wav, ...)
     put_bits  (&ctx->pb,  3, sconf->resolution);
     put_bits  (&ctx->pb,  1, sconf->floating);
     put_bits  (&ctx->pb,  1, sconf->msb_first);       // msb first (0 = LSB, 1 = MSB)
@@ -2992,13 +2992,13 @@ static int als_encode_frame(AVCodecContext *avctx, AVPacket *avpkt,
         }
 
         if (!ctx->flushed) {
-            /*
+            
             uint8_t *side_data = av_packet_new_side_data(avpkt, AV_PKT_DATA_NEW_EXTRADATA,
                                                          avctx->extradata_size);
             if (!side_data)
                 return AVERROR(ENOMEM);
             memcpy(side_data, avctx->extradata, avctx->extradata_size);
-            */
+            
             avpkt->pts      = ctx->next_pts;
             *got_packet_ptr = 1;
             ctx->flushed    = 1;
@@ -3106,7 +3106,7 @@ static av_cold int get_specific_config(AVCodecContext *avctx)
     *sconf = *spc_config_settings[avctx->compression_level];
 
     // total number of samples unknown
-    // sconf->samples = 0xFFFFFFFF;
+    sconf->samples = 0xFFFFFFFF;
 
     // determine sample format
     switch (avctx->sample_fmt) {
